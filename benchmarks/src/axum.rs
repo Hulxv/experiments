@@ -1,7 +1,8 @@
 use axum::{response::Html, routing::get, Router};
 use metacall;
-#[tokio::main]
-async fn main() {
+use tokio::runtime::Runtime;
+
+fn main() {
     match metacall::initialize() {
         Err(e) => {
             println!("{}", e);
@@ -13,18 +14,24 @@ async fn main() {
     let scripts = ["App.tsx".to_string()];
 
     if let Err(e) = metacall::load_from_file("ts", &scripts) {
-        println!("{}", e);
-        panic!();
+        panic!("{}", e);
+    } else {
+        println!("scripts loaded");
     }
-    println!("scripts loaded");
 
-    let app = Router::new().route("/", get(root));
+    let rt = Runtime::new().unwrap();
+    rt.block_on(async {
+        let app = Router::new().route("/", get(root));
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:8082").await.unwrap();
-    axum::serve(listener, app).await.unwrap();
+        let listener = tokio::net::TcpListener::bind("0.0.0.0:8082").await.unwrap();
+        println!(
+            "listening on {}",
+            listener.local_addr().unwrap().to_string()
+        );
+        axum::serve(listener, app).await.unwrap();
+    });
 }
 
-// basic handler that responds with a static string
 async fn root() -> Html<String> {
     match metacall::metacall("Hello", &[metacall::Any::Str("Metacall!".to_string())]) {
         Err(e) => {
