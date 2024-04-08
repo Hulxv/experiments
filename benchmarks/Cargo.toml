@@ -1,5 +1,5 @@
 [package]
-name = "metacall_react_actix_example"
+name = "metacall_ssr_example"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 actix-web = "4"
 axum = "0.7.4"
-metacall = "0.3.0"
+metacall = "0.4.0"
 tokio = { version = "1.36.0", features = ["full"] }
 tracing-subscriber = "0.3.18"
 warp = "0.3.6"

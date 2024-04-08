@@ -1,46 +1,39 @@
 use axum::{response::Html, routing::get, Router};
-use metacall;
+use metacall::{loaders, metacall, switch};
 use tokio::runtime::Runtime;
 
-fn main() {
-    match metacall::initialize() {
-        Err(e) => {
-            println!("{}", e);
-            panic!();
-        }
-        _ => println!("MetaCall initialized"),
-    }
+// async fn root() -> Html<String> {
+//     Html(String::from("Metacall!"))
+// }
 
-    let scripts = ["App.tsx".to_string()];
+#[tokio::main(flavor = "current_thread")]
+async fn main() {
+    let _metacall = switch::initialize().unwrap();
+    loaders::from_single_file("ts", "App.tsx").unwrap();
 
-    if let Err(e) = metacall::load_from_file("ts", &scripts) {
-        panic!("{}", e);
-    } else {
-        println!("scripts loaded");
-    }
+    let app = Router::new().route("/", get(root));
 
-    let rt = Runtime::new().unwrap();
-    rt.block_on(async {
-        let app = Router::new().route("/", get(root));
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:8082").await.unwrap();
 
-        let listener = tokio::net::TcpListener::bind("0.0.0.0:8082").await.unwrap();
-        println!(
-            "listening on {}",
-            listener.local_addr().unwrap().to_string()
-        );
-        axum::serve(listener, app).await.unwrap();
-    });
+    println!(
+        "listening on {}",
+        listener.local_addr().unwrap().to_string()
+    );
+
+    axum::serve(listener, app).await.unwrap();
 }
 
 async fn root() -> Html<String> {
-    match metacall::metacall("Hello", &[metacall::Any::Str("Metacall!".to_string())]) {
-        Err(e) => {
-            println!("{}", e);
-            panic!();
-        }
-        Ok(ret) => match ret {
-            metacall::Any::Str(message) => Html(message),
-            _ => Html("<h1>Not a Valid HTML</h1>".to_string()),
+    Html(
+        match metacall::<String>("Hello", ["Metacall!".to_string()]) {
+            Err(e) => {
+                println!("{:?}", e);
+                panic!();
+            }
+            Ok(ret) => match ret {
+                message => message,
+                _ => "<h1>Not a Valid HTML</h1>".to_string(),
+            },
         },
-    }
+    )
 }

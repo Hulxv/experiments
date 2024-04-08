@@ -910,25 +910,25 @@ checksum = "2dffe52ecf27772e601905b7522cb4ef790d2cc203488bbd0e2fe85fcb74566d"
 
 [[package]]
 name = "metacall"
-version = "0.3.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "877f13ea09311b63fe024fe6ce26f235805f087df22eda00bb608759be8a99f3"
+checksum = "7df6dcf34281ec6c622f68795792ae2777e604dd18e3ff65d1985378fc5f5c1d"
 dependencies = [
  "metacall-inline",
 ]
 
 [[package]]
 name = "metacall-inline"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "004063f08bffbf135b3defc3fb2a87f8d300b448e98ac03ce758eb77b5fe3a7f"
+checksum = "eea0f2dbbd54103e20203c151feeda617b410816494d8c260852059792deb616"
 dependencies = [
  "proc-macro2",
  "quote",
 ]
 
 [[package]]
-name = "metacall_react_actix_example"
+name = "metacall_ssr_example"
 version = "0.1.0"
 dependencies = [
  "actix-web",

@@ -18,39 +18,50 @@ run this command
 ```terminal
 $ ./benchmark.sh
 ```
-
-**actix-web**
-
+**Actix**
 ```
-1 thread and 1 connection
+Running 1m test @ http://127.0.0.1:8080
+  1 threads and 1 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    42.96us   77.37us   9.98ms   99.39%
-    Req/Sec    24.04k     2.13k   26.33k    85.86%
-  1437568 requests in 1.00m, 340.00MB read
-Requests/sec:  23919.59
-Transfer/sec:      5.66MB
+    Latency    24.34us   70.93us   8.52ms   99.45%
+    Req/Sec    44.30k     4.18k   48.66k    90.35%
+  2649355 requests in 1.00m, 626.60MB read
+Requests/sec:  44082.87
+Transfer/sec:     10.43MB
 ```
 
-***warp***
-
+**Warp**
 ```
-1 thread and 1 connection
+Running 1m test @ http://127.0.0.1:8083
+  1 threads and 1 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    36.35us   22.11us   3.11ms   97.87%
-    Req/Sec    27.96k     2.48k   30.94k    78.87%
-  1671659 requests in 1.00m, 396.96MB read
-Requests/sec:  27814.82
-Transfer/sec:      6.61MB
-```
-
-***axum***
+    Latency    23.96us   93.11us  11.38ms   99.70%
+    Req/Sec    44.65k     4.34k   49.74k    84.17%
+  2665135 requests in 1.00m, 632.88MB read
+Requests/sec:  44418.66
+Transfer/sec:     10.55MB
 
 ```
-1 thread and 1 connection
+***Axum***
+```
+Running 1m test @ http://127.0.0.1:8082
+  1 threads and 1 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    46.45us   54.40us   7.81ms   99.00%
-    Req/Sec    21.99k     1.57k   23.88k    83.86%
-  1314792 requests in 1.00m, 310.96MB read
-Requests/sec:  21876.88
-Transfer/sec:      5.17MB
+    Latency    23.83us   62.50us   8.81ms   99.56%
+    Req/Sec    43.33k     3.59k   48.27k    73.04%
+  2591651 requests in 1.00m, 612.95MB read
+Requests/sec:  43122.68
+Transfer/sec:     10.20MB
+```
+
+
+## Diagram
+```
+xychart-beta
+    title "Sales Revenue"
+    x-axis ["Actix-web", "Warp", "Axum"] 
+    y-axis "Revenue (in $)" 10000 --> 60000
+    bar [44082.87, 44418.66,43122.68]
+   
+
 ```

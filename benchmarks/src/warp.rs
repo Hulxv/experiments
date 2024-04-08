@@ -1,34 +1,24 @@
-use metacall;
+use metacall::{metacall, switch, loaders};
 use warp::{reply::html, Filter};
 
-#[tokio::main]
+#[tokio::main(flavor = "current_thread")]
 async fn main() {
-    match metacall::initialize() {
-        Err(e) => {
-            println!("{}", e);
-            panic!();
-        }
-        _ => println!("MetaCall initialized"),
-    }
+    let _metacall = switch::initialize().unwrap(); 
+    loaders::from_single_file("ts", "App.tsx"); 
 
-    let scripts = ["App.tsx".to_string()];
-
-    if let Err(e) = metacall::load_from_file("ts", &scripts) {
-        println!("{}", e);
-        panic!();
-    }
     let routes = warp::any().map(|| {
-        match metacall::metacall("Hello", &[metacall::Any::Str("emslgjnse!".to_string())]) {
+        html(
+            match metacall::<String>("Hello", ["emslgjnse!".to_string()]) {
             Err(e) => {
-                println!("{}", e);
-                panic!();
+                format!("Cannot load component: {e:?}")
             }
-            Ok(ret) => html(match ret {
-                metacall::Any::Str(message) => message,
+            Ok(ret) => match ret {
+                message => message,
                 _ => "<h1>Not a Valid HTML</h1>".to_string(),
-            }),
-        }
+            },
+        })
     });
-
-    warp::serve(routes).run(([127, 0, 0, 1], 8083)).await;
+    let addr = ([127, 0, 0, 1], 8083);
+    println!("running on {addr:?}");
+    warp::serve(routes).run(addr).await;
 }
